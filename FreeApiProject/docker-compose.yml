@@ -1,0 +1,30 @@
+version: '3.4'
+
+services:
+  webapp:
+    image: dockernetwork
+    ports:
+      - "5001:5001"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:5001;http://+:5000
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=admin@123
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+    volumes:
+      - ~/.aspnet/https:/https:ro
+    networks:
+        - freeapi_network
+
+  sqldb:
+    container_name: sql-server-db
+    image: "mcr.microsoft.com/azure-sql-edge"
+    environment:
+          SA_PASSWORD: "Sudo@123"
+          ACCEPT_EULA: "Y"
+    ports:
+         - "1433:1433"
+    networks:
+        - freeapi_network
+
+networks:
+    freeapi_network:
